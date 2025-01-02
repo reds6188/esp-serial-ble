@@ -1,2 +1,2 @@
-# esp-library-template
-Template Library for ESP32
+# esp-serial-ble
+Serial over BLE for ESP32
