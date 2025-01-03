@@ -1,6 +1,12 @@
 #include "serial-ble.h"
 
+bleRxHandler::bleRxHandler():NimBLECharacteristicCallbacks(){}
+
 bleRxHandler::bleRxHandler(void (*callback)(const char *data, int data_size)):NimBLECharacteristicCallbacks(){
+	setHandler(callback);
+}
+
+void bleRxHandler::setHandler(void (*callback)(const char *data, int data_size)) {
 	cbOnReceive = callback;
 }
 
@@ -30,9 +36,11 @@ void ServerCallbacks::onDisconnect(NimBLEServer *pServer){
 };
 
 
-SerialBle::SerialBle() {}
+SerialBle::SerialBle(NimBLECharacteristicCallbacks *pRxHandler) {
+	_pRxHandler = pRxHandler;
+}
 
-void SerialBle::init(const char * name, void (*callback)(const char *data, int data_size)) {
+void SerialBle::init(const char * name) {
 
 	console.info(BLE_T, "Start BLE configuration");
 
@@ -65,7 +73,7 @@ void SerialBle::init(const char * name, void (*callback)(const char *data, int d
 
 	// pRxCharacteristic->setCallbacks(cbData);
 	//pRxCharacteristic->setCallbacks(new bleRxHandler());
-	pRxCharacteristic->setCallbacks(new bleRxHandler(callback));
+	pRxCharacteristic->setCallbacks(_pRxHandler);
 	console.log(BLE_T, "Created characteristic for Data");
 
 	// Start service

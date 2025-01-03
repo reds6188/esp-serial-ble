@@ -21,16 +21,17 @@ class SerialBle {
         uint8_t _btMacAddr[6] = {0};
         char _btNameStr[14] = "";
         bool _ble_enabled = false;
+        NimBLECharacteristicCallbacks *_pRxHandler;
         NimBLEServer *_pServer;
         NimBLECharacteristic *_pTxCharacteristic;
         NimBLEService *_pService;
         String genDeviceName(uint8_t *address);
     public:
-        SerialBle();
+        SerialBle(NimBLECharacteristicCallbacks *_pRxHandler);
         void getBtMacAddress(uint8_t *address);
         static String btMAcAddress_toString(const uint8_t *address);
         void printBLEinfo(void);
-        void init(const char * name, void (*cbOnReceive)(const char *data, int data_size));
+        void init(const char * name);
         void deinitBLE(void);
         void sendData(uint8_t *data, int size);
         bool isEnabled(void);
@@ -40,7 +41,9 @@ class bleRxHandler : public NimBLECharacteristicCallbacks {
 private:
     void (*cbOnReceive)(const char *data, int data_size);
 public:
+    bleRxHandler();
     bleRxHandler(void (*callback)(const char *data, int data_size));
+    void setHandler(void (*callback)(const char *data, int data_size));
     void onWrite(NimBLECharacteristic *pCharacteristic);
 };
 
