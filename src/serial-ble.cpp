@@ -69,6 +69,12 @@ void printBLEinfo(void){
 	console.info(BLE_T, "Device Bluetooth name: " + String(btNameStr));
 }
 
+SerialBle::SerialBle() {}
+
+void SerialBle::init(const char * name) {
+    
+}
+
 // void initBLE(const char * name, BLE_CALLBACK* cbData)
 void initBLE(const char *name, void (*callback)(const char *data, int data_size)){
 	// cbData = rxSerialBleCb;
