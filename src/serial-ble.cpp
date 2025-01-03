@@ -11,8 +11,7 @@ NimBLEService *pService;
 
 void (*rxSerialBleCb)(const char *data, int data_size);
 
-void bleRxHandler::onWrite(NimBLECharacteristic *pCharacteristic)
-{
+void bleRxHandler::onWrite(NimBLECharacteristic *pCharacteristic){
 
 	String data_str = pCharacteristic->getValue();
 	uint8_t len = pCharacteristic->getDataLength();
@@ -23,8 +22,7 @@ void bleRxHandler::onWrite(NimBLECharacteristic *pCharacteristic)
 		console.error(BLE_T, "No Rx Serial BLE callback was specified");
 }
 
-class ServerCallbacks : public NimBLEServerCallbacks
-{
+class ServerCallbacks : public NimBLEServerCallbacks{
 
 	void onConnect(NimBLEServer *pServer, ble_gap_conn_desc *desc)
 	{
@@ -56,27 +54,23 @@ class ServerCallbacks : public NimBLEServerCallbacks
 	};
 };
 
-void getBtMacAddress(uint8_t *address)
-{
+void getBtMacAddress(uint8_t *address){
 	esp_read_mac(address, ESP_MAC_BT);
 }
 
-String btMAcAddress_toString(const uint8_t *address)
-{
+String btMAcAddress_toString(const uint8_t *address){
 	char btMacAddrStr[18];
 	snprintf(btMacAddrStr, 18, "%02X:%02X:%02X:%02X:%02X:%02X", address[0], address[1], address[2], address[3], address[4], address[5]);
 	return String(btMacAddrStr);
 }
 
-void printBLEinfo(void)
-{
+void printBLEinfo(void){
 	console.info(BLE_T, "Device Bluetooth MAC Address: " + btMAcAddress_toString(btMacAddr));
 	console.info(BLE_T, "Device Bluetooth name: " + String(btNameStr));
 }
 
 // void initBLE(const char * name, BLE_CALLBACK* cbData)
-void initBLE(const char *name, void (*callback)(const char *data, int data_size))
-{
+void initBLE(const char *name, void (*callback)(const char *data, int data_size)){
 	// cbData = rxSerialBleCb;
 	rxSerialBleCb = callback;
 
@@ -126,15 +120,13 @@ void initBLE(const char *name, void (*callback)(const char *data, int data_size)
 	ble_disabled = false;
 }
 
-void deinitBLE(void)
-{
+void deinitBLE(void){
 	NimBLEDevice::deinit(true);
 	ble_disabled = true;
 	console.success(BLE_T, "BLE was stopped");
 }
 
-void sendDataNotify(uint8_t *data, uint8_t size)
-{
+void sendDataNotify(uint8_t *data, uint8_t size){
 	// console.success(BLE_T, "NOTIFY: " + str);
 	char buffer[320] = "";
 	char tmp[6];
@@ -160,7 +152,6 @@ void sendDataNotify(uint8_t *data, uint8_t size)
 	pTxCharacteristic->notify();
 }
 
-bool isEnabledBLE(void)
-{
+bool isEnabledBLE(void){
 	return !ble_disabled;
 }
