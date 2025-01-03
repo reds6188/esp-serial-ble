@@ -40,13 +40,16 @@ SerialBle::SerialBle(NimBLECharacteristicCallbacks *pRxHandler) {
 	_pRxHandler = pRxHandler;
 }
 
-void SerialBle::init(const char * name) {
+void SerialBle::init(const char * name, bool name_with_address) {
 
 	console.info(BLE_T, "Start BLE configuration");
 
 	// Reading Bluetooth MAC address ------------------------------------------------------
 	getBtMacAddress(_btMacAddr);
-	snprintf(_btNameStr, sizeof(_btNameStr), "%s_%02X%02X%02X", name, _btMacAddr[3], _btMacAddr[4], _btMacAddr[5]);
+	if(name_with_address)
+		snprintf(_btNameStr, sizeof(_btNameStr), "%s_%02X%02X%02X", name, _btMacAddr[3], _btMacAddr[4], _btMacAddr[5]);
+	else
+		strncpy(_btNameStr, name, sizeof(_btNameStr));
 	printBLEinfo();
 
 	NimBLEDevice::init(_btNameStr);

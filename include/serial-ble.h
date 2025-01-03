@@ -31,7 +31,7 @@ class SerialBle {
         void getBtMacAddress(uint8_t *address);
         static String btMAcAddress_toString(const uint8_t *address);
         void printBLEinfo(void);
-        void init(const char * name);
+        void init(const char * name, bool name_with_address = false);
         void deinitBLE(void);
         void sendData(uint8_t *data, int size);
         bool isEnabled(void);
